@@ -1,0 +1,29 @@
+version: '3.8'
+services:
+  account-manager:
+    build: ./account-manager
+    ports:
+      - "3001:3000"
+    environment:
+      - DATABASE_URL=postgresql://user:user123@db:5432/accounts
+    depends_on:
+      - db
+  payment-manager:
+    build: ./payment-manager
+    ports:
+      - "3002:3000"
+    environment:
+      - DATABASE_URL=postgresql://user:user123@db:5432/transactions
+    depends_on:
+      - db
+  db:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: user123
+      POSTGRES_DB: accounts
+    volumes:
+      - db-data:/var/lib/postgresql/data
+
+volumes:
+  db-data:
